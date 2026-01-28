@@ -1,0 +1,25 @@
+# Project Rules (Single Agent)
+
+## North Star
+- ユーザーが「時間を大切にする」きっかけになる。
+- 表現は断定しない（統計の目安）。脅し文句や過度な煽りは禁止。
+
+## Scope
+- MVPは Expo（React Native）+ ローカル保存のみ（AsyncStorage）。
+- バックエンド無し。
+- メンタル配慮モードは作らない（仕様にも入れない）。
+
+## Engineering Principles
+- core は純関数中心（calc/format は UI に依存しない）。
+- 画面は state を直接いじらず store 経由。
+- 変更時は docs/decisions.md を必ず更新（なぜそうしたか）。
+
+## Definition of Done (毎タスク)
+- TypeScriptエラー無し
+- Lint / typecheck / unit test が通る（ある場合）
+- 画面で手動QA（docs/qa-checklist.md の該当項目を実施）
+- 追加/変更した仕様を docs/spec.md に反映
+
+## Task Style
+- 1タスク = 1目的（小さく分割）。
+- まず最小で動かし、後からUI/演出を強化する。
