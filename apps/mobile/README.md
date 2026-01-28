@@ -1,107 +1,147 @@
-import { useEffect, useState } from "react";
-import { View, Text, TextInput, Pressable } from "react-native";
-import { useRouter } from "expo-router";
+# Left - モバイルアプリ
 
-import type { Profile, FocusMode } from "../src/core/model/types";
-import { useProfileStore } from "../src/features/profile/store";
-import { loadProfile, saveProfile } from "../src/features/profile/persistence";
+「時間を大切にする」きっかけを作るアプリです。統計上の目安（平均寿命/設定寿命）までの残り時間を、複数の単位・ビジュアルでいつでも確認できます。
 
-function isHHMM(s: string) {
-  return /^\d{2}:\d{2}$/.test(s);
-}
+## 特徴
 
-export default function Settings() {
-  const router = useRouter();
-  const { state, setProfile, load } = useProfileStore();
+- 📊 残り時間を複数の単位で表示（秒、日、週、月、年、YYYYMMDDHHMMSS形式）
+- 📈 人生の進捗バー
+- ⏰ 今日の活動時間の残り時間
+- 📝 今日/今週の1行メモ
+- 💾 ローカルストレージのみ（オフライン対応）
 
-  const [birthISO, setBirthISO] = useState("2000-01-01");
-  const [years, setYears] = useState("80.0");
-  const [activeStart, setActiveStart] = useState("07:00");
-  const [activeEnd, setActiveEnd] = useState("23:00");
-  const [defaultFocusMode, setDefaultFocusMode] = useState<FocusMode>("today");
-  const [error, setError] = useState<string | null>(null);
+## 技術スタック
 
-  useEffect(() => {
-    (async () => {
-      const p = await loadProfile();
-      load(p);
-      if (p) {
-        setBirthISO(p.birthISO);
-        setYears(String(p.lifeExpectancyYears));
-        setActiveStart(p.activeStart);
-        setActiveEnd(p.activeEnd);
-        setDefaultFocusMode(p.defaultFocusMode);
-      }
-    })();
-  }, [load]);
+- **フレームワーク**: Expo SDK 54 (React Native 0.81)
+- **React**: 19.1.0
+- **ルーティング**: Expo Router 6.0
+- **状態管理**: React Context + useReducer
+- **ストレージ**: AsyncStorage
+- **言語**: TypeScript 5.9
 
-  async function onSave() {
-    setError(null);
-    const y = Number(years);
+## プロジェクト構造
 
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(birthISO)) return setError("生年月日は YYYY-MM-DD で入力してください");
-    if (!Number.isFinite(y) || y < 1 || y > 150) return setError("寿命の目安は 1〜150 の範囲で入力してください");
-    if (!isHHMM(activeStart) || !isHHMM(activeEnd)) return setError("活動時間は HH:MM で入力してください");
+```
+apps/mobile/
+├── app/                    # 画面（Expo Router）
+│   ├── _layout.tsx        # ルートレイアウト
+│   ├── index.tsx          # ホーム画面
+│   └── settings.tsx       # 設定画面
+├── src/
+│   ├── components/        # 再利用可能なコンポーネント
+│   │   ├── FocusBar.tsx   # 1行メモコンポーネント
+│   │   ├── LifeBar.tsx    # 人生進捗バー
+│   │   ├── TimeValue.tsx  # 時間表示コンポーネント
+│   │   └── UnitToggle.tsx # 単位切替コンポーネント
+│   ├── core/
+│   │   ├── model/         # 型定義
+│   │   ├── storage/       # ストレージユーティリティ
+│   │   └── time/          # 時間計算・フォーマット
+│   └── features/          # 機能別モジュール
+│       ├── focus/         # 1行メモ機能
+│       └── profile/       # プロフィール機能
+└── docs/                  # ドキュメント
+    ├── spec.md           # 仕様書
+    ├── milestones.md     # マイルストーン
+    ├── decisions.md      # 技術決定ログ
+    ├── future-features.md # 将来的な拡張機能
+    ├── assets-setup.md   # アイコン/スプラッシュ設定
+    ├── ui-improvements.md # UI改善ログ
+    ├── m2-summary.md     # M2完了レポート
+    ├── picker-implementation.md # ピッカー実装ガイド
+    └── modal-picker-design.md # モーダルピッカーデザイン
 
-    // start < end を簡易チェック
-    if (activeStart >= activeEnd) return setError("活動時間は start < end になるようにしてください（例 07:00〜23:00）");
+## セットアップ
 
-    const p: Profile = {
-      birthISO,
-      lifeExpectancyYears: y,
-      activeStart,
-      activeEnd,
-      defaultFocusMode,
-    };
+### 前提条件
 
-    await saveProfile(p);
-    setProfile(p);
-    router.replace("/");
-  }
+- Node.js 18+
+- npm または yarn
 
-  return (
-    <View style={{ padding: 16, gap: 12 }}>
-      <Text style={{ fontSize: 18, fontWeight: "700" }}>設定</Text>
+### インストール
 
-      <View style={{ gap: 6 }}>
-        <Text>生年月日（YYYY-MM-DD）</Text>
-        <TextInput value={birthISO} onChangeText={setBirthISO} style={{ borderWidth: 1, borderRadius: 12, padding: 10 }} />
-      </View>
+```bash
+cd apps/mobile
+npm install
+```
 
-      <View style={{ gap: 6 }}>
-        <Text>寿命の目安（年）</Text>
-        <TextInput value={years} onChangeText={setYears} keyboardType="numeric" style={{ borderWidth: 1, borderRadius: 12, padding: 10 }} />
-      </View>
+### 開発サーバーの起動
 
-      <View style={{ gap: 6 }}>
-        <Text>活動時間 start（HH:MM）</Text>
-        <TextInput value={activeStart} onChangeText={setActiveStart} style={{ borderWidth: 1, borderRadius: 12, padding: 10 }} />
-      </View>
+```bash
+npm start
+```
 
-      <View style={{ gap: 6 }}>
-        <Text>活動時間 end（HH:MM）</Text>
-        <TextInput value={activeEnd} onChangeText={setActiveEnd} style={{ borderWidth: 1, borderRadius: 12, padding: 10 }} />
-      </View>
+または特定のポートで起動:
 
-      <View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
-        <Text>1行メモのデフォルト</Text>
-        <Pressable onPress={() => setDefaultFocusMode("today")} style={{ padding: 8, borderWidth: 1, borderRadius: 12, opacity: defaultFocusMode === "today" ? 1 : 0.5 }}>
-          <Text>Today</Text>
-        </Pressable>
-        <Pressable onPress={() => setDefaultFocusMode("week")} style={{ padding: 8, borderWidth: 1, borderRadius: 12, opacity: defaultFocusMode === "week" ? 1 : 0.5 }}>
-          <Text>Week</Text>
-        </Pressable>
-      </View>
+```bash
+npx expo start --port 8082
+```
 
-      {error ? <Text style={{ color: "red" }}>{error}</Text> : null}
+### プラットフォーム別の起動
 
-      <Pressable onPress={onSave} style={{ padding: 14, borderWidth: 1, borderRadius: 14 }}>
-        <Text style={{ fontWeight: "600" }}>保存して戻る</Text>
-      </Pressable>
+```bash
+# iOS
+npm run ios
 
-      <Text style={{ opacity: 0.7, marginTop: 8 }}>
-        ※本アプリは統計上の目安です。寿命を予測するものではありません。
-      </Text>
-    </View>
-  );
-}
+# Android
+npm run android
+
+# Web
+npm run web
+```
+
+## 開発
+
+### TypeScript型チェック
+
+```bash
+npm run typecheck
+```
+
+### Lint
+
+```bash
+npm run lint
+```
+
+## アーキテクチャ原則
+
+- **Pure Functions**: `core` モジュールは純関数中心（UIに依存しない）
+- **State Management**: 画面はstateを直接変更せず、store経由で操作
+- **Documentation**: 変更時は `docs/decisions.md` を必ず更新
+
+## マイルストーン
+
+### M1（MVP）✅
+- ✅ Onboarding（初回設定）
+- ✅ Home画面（残り時間表示）
+- ✅ 人生バー
+- ✅ 活動時間の残り
+- ✅ 1行メモ（Today/Week切替）
+
+### M2（品質）✅
+- ✅ フォーマット改善
+- ✅ 設定画面UI改善
+- ⏸️ ユニットテスト追加（後続で対応）
+
+### M3（可視化強化）
+- Weekグリッド表示
+- アニメーション追加
+
+### M4（配布）
+- ✅ アイコン/スプラッシュ画像（仮版完了）
+- ✅ アプリ名を「Left」に変更
+- ストア向け文言整備
+
+### 将来的な拡張（M5以降）
+- イベント機能：任意のイベントまでのカウントダウン
+- 通知機能：残り時間が少なくなったらアラート
+- 詳細は `docs/future-features.md` を参照
+
+## 注意事項
+
+本アプリは統計上の目安です。寿命を予測するものではありません。
+
+## ライセンス
+
+Private

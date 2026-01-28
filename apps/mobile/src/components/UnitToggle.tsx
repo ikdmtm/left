@@ -2,12 +2,13 @@ import { View, Text, Pressable } from "react-native";
 import type { Unit } from "../core/model/types";
 
 const UNITS: { key: Unit; label: string }[] = [
-  { key: "seconds", label: "秒" },
-  { key: "days", label: "日" },
-  { key: "weeks", label: "週" },
-  { key: "months_avg", label: "月" },
   { key: "years", label: "年" },
-  { key: "digits", label: "YYMMDD…" },
+  { key: "months_avg", label: "月" },
+  { key: "weeks", label: "週" },
+  { key: "days", label: "日" },
+  { key: "hours", label: "時" },
+  { key: "minutes", label: "分" },
+  { key: "seconds", label: "秒" },
 ];
 
 export function UnitToggle({

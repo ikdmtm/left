@@ -22,6 +22,8 @@ function comma(n: number) {
 
 export function formatRemaining(remainingMs: number, unit: Unit): string {
   if (unit === "seconds") return `${comma(Math.floor(remainingMs / MS_PER_SEC))} 秒`;
+  if (unit === "minutes") return `${comma(Math.floor(remainingMs / MS_PER_MIN))} 分`;
+  if (unit === "hours") return `${comma(Math.floor(remainingMs / MS_PER_HOUR))} 時間`;
   if (unit === "days") return `${comma(Math.floor(remainingMs / MS_PER_DAY))} 日`;
   if (unit === "weeks") return `${comma(Math.floor(remainingMs / MS_PER_WEEK))} 週`;
   if (unit === "months_avg") return `${comma(Math.floor(remainingMs / MS_PER_MONTH_AVG))} ヶ月`;
@@ -58,12 +60,11 @@ export function formatDigits(remainingMs: number): string {
 
 export function formatDateTime(dt: Date): string {
   const y = dt.getFullYear();
-  const m = pad2(dt.getMonth() + 1);
-  const d = pad2(dt.getDate());
+  const m = dt.getMonth() + 1;
+  const d = dt.getDate();
   const hh = pad2(dt.getHours());
   const mm = pad2(dt.getMinutes());
-  const ss = pad2(dt.getSeconds());
-  return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
+  return `${y}年${m}月${d}日 ${hh}:${mm}`;
 }
 
 export function formatDurationHMS(ms: number): string {
@@ -71,5 +72,5 @@ export function formatDurationHMS(ms: number): string {
   const h = Math.floor(totalSec / 3600);
   const m = Math.floor((totalSec % 3600) / 60);
   const s = totalSec % 60;
-  return `${h}h ${m}m ${s}s`;
+  return `${h}時間 ${m}分 ${s}秒`;
 }

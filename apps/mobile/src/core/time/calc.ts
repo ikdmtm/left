@@ -3,6 +3,7 @@ import type { Profile } from "../model/types";
 const MS_PER_MIN = 60 * 1000;
 const MS_PER_HOUR = 60 * MS_PER_MIN;
 const MS_PER_DAY = 24 * MS_PER_HOUR;
+const MS_PER_WEEK = 7 * MS_PER_DAY;
 
 export const DAYS_PER_YEAR = 365.2425;
 export const DAYS_PER_MONTH_AVG = DAYS_PER_YEAR / 12;
@@ -49,7 +50,19 @@ export function calcTodayActiveRemainingMs(now: Date, profile: Profile): number 
   const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), eh, em, 0, 0);
 
   const nowMs = now.getTime();
-  if (nowMs < start.getTime()) return end.getTime() - start.getTime(); // “まだ開始前”は今日の活動総量を出す案もあるが…
+  if (nowMs < start.getTime()) return end.getTime() - start.getTime(); // "まだ開始前"は今日の活動総量を出す案もあるが…
   if (nowMs > end.getTime()) return 0;
   return end.getTime() - nowMs;
+}
+
+/**
+ * 人生の週数を計算
+ */
+export function calcWeeks(nowMs: number, birthMs: number, lifeExpectancyYears: number) {
+  const endMs = calcEndDateMs(birthMs, lifeExpectancyYears);
+  const totalWeeks = Math.floor((endMs - birthMs) / MS_PER_WEEK);
+  const livedWeeks = Math.floor((nowMs - birthMs) / MS_PER_WEEK);
+  const remainingWeeks = Math.max(0, totalWeeks - livedWeeks);
+  
+  return { totalWeeks, livedWeeks, remainingWeeks };
 }

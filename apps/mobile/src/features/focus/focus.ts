@@ -27,5 +27,5 @@ export function normalizeOneLine(s: string): string {
 }
 
 export function getLabel(mode: FocusMode): string {
-  return mode === "today" ? "今日の1行" : "今週の1行";
+  return mode === "today" ? "今日の1行メモ" : "今週の1行メモ";
 }
