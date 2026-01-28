@@ -45,6 +45,7 @@ apps/mobile/
     ├── milestones.md     # マイルストーン
     ├── decisions.md      # 技術決定ログ
     ├── future-features.md # 将来的な拡張機能
+    ├── monetization-plan.md # 広告実装プラン
     ├── assets-setup.md   # アイコン/スプラッシュ設定
     ├── ui-improvements.md # UI改善ログ
     ├── m2-summary.md     # M2完了レポート
@@ -131,12 +132,14 @@ npm run lint
 ### M4（配布）
 - ✅ アイコン/スプラッシュ画像（仮版完了）
 - ✅ アプリ名を「Left」に変更
+- 広告実装（Google AdMob）
 - ストア向け文言整備
 
 ### 将来的な拡張（M5以降）
 - イベント機能：任意のイベントまでのカウントダウン
 - 通知機能：残り時間が少なくなったらアラート
-- 詳細は `docs/future-features.md` を参照
+- 収益化：広告実装、プレミアム版
+- 詳細は `docs/future-features.md` と `docs/monetization-plan.md` を参照
 
 ## 注意事項
 
