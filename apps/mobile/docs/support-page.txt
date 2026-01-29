@@ -131,7 +131,7 @@
 
 
 ==================================================
-■ GitHub Pagesへのアップロード手順
+■ GitHub Pagesへのアップロード手順（HTML版）
 ==================================================
 
 1. GitHubで新しいリポジトリを作成
@@ -158,6 +158,41 @@
 
 5. 完成！
    サポートURL: https://ikdmtm.github.io/left-support/
+
+
+==================================================
+■ GitHub Pagesへのアップロード手順（Markdown版）
+==================================================
+
+1. GitHubで新しいリポジトリを作成
+   - リポジトリ名: left-support
+   - Public に設定
+
+2. README.md を作成
+   - support-page.md の内容をコピー
+   - README.md として保存
+
+3. GitHubにプッシュ
+   git init
+   git add README.md
+   git commit -m "Add support page"
+   git branch -M main
+   git remote add origin https://github.com/ikdmtm/left-support.git
+   git push -u origin main
+
+4. GitHub Pagesを有効化
+   - リポジトリの Settings → Pages
+   - Source: Deploy from a branch
+   - Branch: main / (root)
+   - Save
+
+5. 完成！
+   サポートURL: https://ikdmtm.github.io/left-support/
+
+※Markdown版の利点：
+- シンプルで編集しやすい
+- GitHubが自動的にHTMLに変換してくれる
+- リポジトリのトップページとしても表示される
 
 
 ==================================================
