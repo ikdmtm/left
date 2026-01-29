@@ -94,11 +94,18 @@ export default function Settings() {
     const activeStart = `${String(startHour).padStart(2, "0")}:${String(startMinute).padStart(2, "0")}`;
     const activeEnd = `${String(endHour).padStart(2, "0")}:${String(endMinute).padStart(2, "0")}`;
     
-    // start < end のチェック
+    // start < end のチェック（終了時刻が開始時刻より小さい場合は翌日として扱う）
     const startMinutes = startHour * 60 + startMinute;
-    const endMinutes = endHour * 60 + endMinute;
-    if (startMinutes >= endMinutes) {
-      return setError("活動開始時刻は終了時刻より前にしてください");
+    let endMinutes = endHour * 60 + endMinute;
+    
+    // 終了時刻が開始時刻より小さい場合は翌日とみなす（例：23時開始→2時終了）
+    if (endMinutes <= startMinutes) {
+      endMinutes += 24 * 60; // 翌日として24時間を加算
+    }
+    
+    // 活動時間が24時間を超えていないかチェック
+    if (endMinutes - startMinutes >= 24 * 60) {
+      return setError("活動時間が24時間を超えています");
     }
 
     const p: Profile = {
@@ -197,7 +204,7 @@ export default function Settings() {
               <Text style={{ fontSize: 16 }}>{String(endMinute).padStart(2, "0")}分</Text>
             </TouchableOpacity>
           </View>
-          <Text style={{ fontSize: 12, opacity: 0.6 }}>※通常の就寝時刻を選択してください</Text>
+          <Text style={{ fontSize: 12, opacity: 0.6 }}>※通常の就寝時刻を選択してください（0〜6時は翌日として扱われます）</Text>
         </View>
 
         {/* 1行メモのデフォルト */}
