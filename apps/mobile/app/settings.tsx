@@ -98,14 +98,15 @@ export default function Settings() {
     const startMinutes = startHour * 60 + startMinute;
     let endMinutes = endHour * 60 + endMinute;
     
-    // 終了時刻が開始時刻より小さい場合は翌日とみなす（例：23時開始→2時終了）
+    // 終了時刻が開始時刻以下の場合は翌日とみなす（例：23時開始→2時終了）
     if (endMinutes <= startMinutes) {
       endMinutes += 24 * 60; // 翌日として24時間を加算
     }
     
-    // 活動時間が24時間を超えていないかチェック
-    if (endMinutes - startMinutes >= 24 * 60) {
-      return setError("活動時間が24時間を超えています");
+    // 活動時間が23時間を超えていないかチェック
+    const activityHours = (endMinutes - startMinutes) / 60;
+    if (activityHours > 23) {
+      return setError("活動時間は23時間までに設定してください");
     }
 
     const p: Profile = {
@@ -204,7 +205,7 @@ export default function Settings() {
               <Text style={{ fontSize: 16 }}>{String(endMinute).padStart(2, "0")}分</Text>
             </TouchableOpacity>
           </View>
-          <Text style={{ fontSize: 12, opacity: 0.6 }}>※通常の就寝時刻を選択してください（0〜6時は翌日として扱われます）</Text>
+          <Text style={{ fontSize: 12, opacity: 0.6 }}>※開始時刻より前の時刻は翌日として扱われます（活動時間は最大23時間）</Text>
         </View>
 
         {/* 1行メモのデフォルト */}
