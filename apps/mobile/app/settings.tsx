@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { View, Text, ScrollView, Modal, TouchableOpacity } from "react-native";
+import { View, Text, ScrollView, Modal, TouchableOpacity, Linking } from "react-native";
 import { useRouter, useFocusEffect } from "expo-router";
 import { Picker } from "@react-native-picker/picker";
 import { StatusBar } from "expo-status-bar";
@@ -460,6 +460,29 @@ export default function Settings() {
           </View>
         </View>
       </Modal>
+
+      {/* プライバシーポリシー */}
+      <View style={{ 
+        paddingVertical: 20, 
+        paddingHorizontal: 20,
+        alignItems: "center",
+        borderTopWidth: 1,
+        borderTopColor: "#e0e0e0"
+      }}>
+        <TouchableOpacity 
+          onPress={() => Linking.openURL("https://ikdmtm.github.io/left-privacy/")}
+          style={{ padding: 10 }}
+        >
+          <Text style={{ 
+            fontSize: 12, 
+            color: "#888",
+            textDecorationLine: "underline"
+          }}>
+            プライバシーポリシー
+          </Text>
+        </TouchableOpacity>
+      </View>
+
       </ScrollView>
     </>
   );

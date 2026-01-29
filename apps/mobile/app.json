@@ -16,7 +16,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.yourcompany.timetoavglife"
+      "bundleIdentifier": "com.ikdmtm.left"
     },
     "android": {
       "adaptiveIcon": {
@@ -32,6 +32,10 @@
     "scheme": "timetoavglife",
     "plugins": [
       "expo-router"
-    ]
+    ],
+    "privacy": "public",
+    "extra": {
+      "privacyPolicyUrl": "https://ikdmtm.github.io/left-privacy/"
+    }
   }
 }
