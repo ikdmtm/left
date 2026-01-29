@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Left",
-    "slug": "time-to-avg-life",
+    "slug": "left",
     "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
