@@ -16,7 +16,10 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.ikdmtm.left"
+      "bundleIdentifier": "com.ikdmtm.left",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -35,7 +38,11 @@
     ],
     "privacy": "public",
     "extra": {
-      "privacyPolicyUrl": "https://ikdmtm.github.io/left-privacy/"
+      "privacyPolicyUrl": "https://ikdmtm.github.io/left-privacy/",
+      "router": {},
+      "eas": {
+        "projectId": "02f2eecf-bf96-4846-b2f1-091ba27828dc"
+      }
     }
   }
 }
