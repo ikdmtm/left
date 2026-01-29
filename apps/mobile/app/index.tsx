@@ -76,7 +76,13 @@ export default function Home() {
     const [startH, startM] = profile.activeStart.split(":").map(Number);
     const [endH, endM] = profile.activeEnd.split(":").map(Number);
     const startMs = (startH * 60 + startM) * 60 * 1000;
-    const endMs = (endH * 60 + endM) * 60 * 1000;
+    let endMs = (endH * 60 + endM) * 60 * 1000;
+    
+    // 終了時刻が開始時刻以下の場合は翌日として扱う（24時間加算）
+    if (endMs <= startMs) {
+      endMs += 24 * 60 * 60 * 1000;
+    }
+    
     const totalActiveMs = endMs - startMs;
     const elapsedActiveMs = Math.max(0, totalActiveMs - activeRemainingMs);
     const activeProgress = totalActiveMs > 0 ? elapsedActiveMs / totalActiveMs : 0;

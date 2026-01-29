@@ -103,10 +103,12 @@ export default function Settings() {
       endMinutes += 24 * 60; // 翌日として24時間を加算
     }
     
-    // 活動時間が23時間を超えていないかチェック
-    const activityHours = (endMinutes - startMinutes) / 60;
-    if (activityHours > 23) {
-      return setError("活動時間は23時間までに設定してください");
+    // 活動時間の計算
+    const activityMinutes = endMinutes - startMinutes;
+    
+    // 0時間または24時間はエラー、1分〜23時間まではOK
+    if (activityMinutes <= 0 || activityMinutes >= 24 * 60) {
+      return setError("活動時間は1分以上23時間59分までに設定してください");
     }
 
     const p: Profile = {

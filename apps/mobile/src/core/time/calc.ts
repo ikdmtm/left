@@ -40,18 +40,34 @@ function parseHHMM(hhmm: string): { h: number; m: number } {
 /**
  * 今日の活動時間の残り（ms）
  * activeStart〜activeEnd の範囲内なら (end - now)、範囲外なら 0
- * ※ start < end 前提（設定で担保）
+ * ※終了時刻が開始時刻以下の場合は翌日として扱う
  */
 export function calcTodayActiveRemainingMs(now: Date, profile: Profile): number {
   const { h: sh, m: sm } = parseHHMM(profile.activeStart);
   const { h: eh, m: em } = parseHHMM(profile.activeEnd);
 
   const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), sh, sm, 0, 0);
-  const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), eh, em, 0, 0);
+  let end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), eh, em, 0, 0);
+  
+  // 終了時刻が開始時刻以下の場合は翌日として扱う（例：23:00→02:00）
+  if (end.getTime() <= start.getTime()) {
+    end = new Date(end.getTime() + MS_PER_DAY);
+  }
 
   const nowMs = now.getTime();
-  if (nowMs < start.getTime()) return end.getTime() - start.getTime(); // "まだ開始前"は今日の活動総量を出す案もあるが…
-  if (nowMs > end.getTime()) return 0;
+  
+  // 現在時刻が開始前の場合
+  if (nowMs < start.getTime()) {
+    // 開始時刻が今日で、終了時刻が翌日の場合を考慮
+    return end.getTime() - start.getTime();
+  }
+  
+  // 現在時刻が終了後の場合
+  if (nowMs > end.getTime()) {
+    return 0;
+  }
+  
+  // 活動時間内
   return end.getTime() - nowMs;
 }
 
